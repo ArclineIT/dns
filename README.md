@@ -31,3 +31,7 @@ arcline-dns example.com --json
 - Color-coded output: green = agrees, red = differs, yellow = no response
 
 See [todo.md](todo.md) for the full task list and output format spec.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
