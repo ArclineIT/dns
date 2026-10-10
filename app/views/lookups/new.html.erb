@@ -1,0 +1,28 @@
+<% content_for :title, "Arcline DNS — propagation checker" %>
+
+<section class="page-header">
+  <div class="container">
+    <p class="eyebrow">DNS</p>
+    <h1 class="page-header__title">Has your DNS change spread?</h1>
+    <p class="lead">Ask public resolvers around the world, and the domain's own nameservers, the same question at once, and see which of them still disagree.</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="dash">
+      <%= render "form" %>
+
+      <section class="dash-section">
+        <h2 class="dash-section__title">reading the result</h2>
+        <div class="panel">
+          <ul class="findings">
+            <li class="findings__item"><span class="status-badge status-badge--ok">ok</span><span>The resolver gives the same answer as most of the others.</span></li>
+            <li class="findings__item"><span class="status-badge status-badge--crit">diff</span><span>The resolver gives a different answer, usually an old record it has not yet forgotten. It will catch up when the TTL runs out.</span></li>
+            <li class="findings__item"><span class="status-badge status-badge--warn">none</span><span>The resolver did not respond.</span></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

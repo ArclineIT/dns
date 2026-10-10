@@ -1,0 +1,66 @@
+<% content_for :title, "#{@domain} #{@type} — Arcline DNS" %>
+<% if @watch %><% content_for :head do %><meta http-equiv="refresh" content="<%= @watch %>"><% end %><% end %>
+<% query = { domain: @domain, type: @type, resolvers: @custom }.compact %>
+
+<section class="page-header">
+  <div class="container">
+    <p class="eyebrow"><%= link_to "DNS", root_path %></p>
+    <h1 class="page-header__title page-header__title--article"><%= @domain %> <span class="page-header__type"><%= @type %></span></h1>
+    <p class="lead"><%= @result.summary.capitalize %>.</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="dash">
+      <div class="panel">
+        <div class="table-wrap">
+          <table class="inv-table">
+            <thead>
+              <tr>
+                <th class="inv-table__th">Resolver</th>
+                <th class="inv-table__th">Answer</th>
+                <th class="inv-table__th inv-table__th--right">TTL</th>
+                <th class="inv-table__th">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @result.rows.each do |row| %>
+                <tr class="inv-table__row">
+                  <td class="inv-table__td">
+                    <%= row.resolver.address %>
+                    <% if row.resolver.label %><span class="cell-note"><%= row.resolver.label %><%= " · authoritative" if row.resolver.authoritative %></span><% end %>
+                  </td>
+                  <td class="inv-table__td inv-table__td--answer <%= "inv-table__td--muted" if row.answer.records.empty? %>">
+                    <% if row.answer.records.any? %>
+                      <% row.answer.records.each do |record| %><span class="answer"><%= record %></span><% end %>
+                    <% else %>
+                      <%= row.answer.detail %>
+                    <% end %>
+                  </td>
+                  <td class="inv-table__td inv-table__td--right inv-table__td--muted"><%= row.ttl ? "#{row.ttl}s" : "—" %></td>
+                  <td class="inv-table__td"><span class="status-badge status-badge--<%= status_class(row.status) %>"><%= row.status %></span></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="cell-note">
+        Checked <%= @result.checked_at.utc.strftime("%Y-%m-%d %H:%M:%S UTC") %>.
+        <% if @watch %>
+          Re-checking every <%= @watch %> seconds. <%= link_to "Stop", lookup_path(params: query) %>
+        <% else %>
+          <%= link_to "Re-check every 30 seconds", lookup_path(params: query.merge(watch: 30)) %>
+        <% end %>
+        · <%= link_to "JSON", lookup_path(format: :json, params: query) %> · <%= link_to "Text", lookup_path(format: :text, params: query) %>
+      </p>
+
+      <section class="dash-section">
+        <h2 class="dash-section__title">check another</h2>
+        <%= render "form", domain: @domain, type: @type, resolvers: @custom %>
+      </section>
+    </div>
+  </div>
+</section>

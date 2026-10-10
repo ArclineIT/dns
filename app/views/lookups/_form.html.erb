@@ -1,0 +1,19 @@
+<%# locals: (domain: nil, type: "A", resolvers: nil) %>
+<%= form_with url: lookup_path, method: :get, class: "form" do |form| %>
+  <div class="form__row">
+    <div class="field">
+      <%= form.label :domain, "Domain" %>
+      <%= form.text_field :domain, value: domain, required: true, placeholder: "example.com", autocapitalize: "none", spellcheck: false, autofocus: domain.nil? %>
+    </div>
+    <div class="field">
+      <%= form.label :type, "Record type" %>
+      <%= form.select :type, DnsQuery::TYPES.keys, selected: type %>
+    </div>
+  </div>
+  <div class="field">
+    <%= form.label :resolvers do %>Resolvers <span class="field__optional">(optional)</span><% end %>
+    <%= form.text_field :resolvers, value: resolvers, placeholder: "8.8.8.8, 1.1.1.1", spellcheck: false %>
+    <p class="field__hint">Leave blank to ask Cloudflare, Google, OpenDNS, Quad9 and the domain's own nameservers.</p>
+  </div>
+  <%= form.submit "Check propagation", name: nil, class: "btn btn--primary" %>
+<% end %>
